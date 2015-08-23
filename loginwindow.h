@@ -13,6 +13,7 @@
 class QSettings;
 class QTimer;
 class QAction;
+class QMenu;
 
 namespace Ui {
 class LoginWindow;
@@ -43,7 +44,7 @@ private slots:
     void showPassword(int,int);
     void hidePassword();
     void editAccountLineEdit(int);     // change the current input of the account
-
+    void showHelpMessage();
 
 signals:
     void accountChanged(const QList<Account> &list);
@@ -61,10 +62,11 @@ private:
     void setupSpinAndCheck();
     void setupStatusBar();
     void setupSettings();
+    void setupMenu();
     void startup();
     void setupTrayIcon();
     void setupStyle();
-    QString getExePath()const;
+    QString getExeDir()const;
     STULogin *loginAction;
     QSettings *settings;
     QTimer *stateTimer;
@@ -73,6 +75,9 @@ private:
     QAction *exitAction;
     QAction *showSuspendingWin;
     SuspendingWindow *smallWindow;
+    QMenu *aboutMenu;
+    QAction *helpAction;
+    QAction *aboutQt;
     bool logining;  // flag : whether the login button is pressed
     int shownRow;   // used for displaying the password behind the table
     int shownCol;

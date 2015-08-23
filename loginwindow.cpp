@@ -6,6 +6,9 @@
 #include <QSystemTrayIcon>
 #include <QAction>
 #include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QTextCodec>
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
 #include "suspendingwindow.h"
@@ -44,6 +47,7 @@ LoginWindow::LoginWindow(QWidget *parent) :QMainWindow(parent), logining(false),
     setupStatusBar();
     setupSettings();
     setupTrayIcon();
+    setupMenu();
     startup();
     smallWindow->show();
     smallWindow->showAtCorner();
@@ -139,6 +143,20 @@ void LoginWindow::setupSettings(){
     autoChange->setEnabled(true);
 }
 
+void LoginWindow::setupMenu(){
+    aboutMenu = QMainWindow::menuBar()->addMenu(trUtf8("帮助"));
+    helpAction = new QAction(trUtf8("帮助"), this);
+    aboutQt = new QAction(trUtf8("关于Qt"), this);
+
+    connect(helpAction, SIGNAL(triggered(bool)),
+            this, SLOT(showHelpMessage()));
+    connect(aboutQt, SIGNAL(triggered(bool)),
+            qApp, SLOT(aboutQt()));
+    aboutMenu->addAction(helpAction);
+    aboutMenu->addAction(aboutQt);
+
+}
+
 void LoginWindow::startup(){
     stateTimer = new QTimer(this);   // update the state
     stateTimer->setInterval(1500);
@@ -154,6 +172,21 @@ void LoginWindow::startup(){
 void LoginWindow::exit(){
     saveSettings();
     qApp->quit();
+}
+
+void LoginWindow::showHelpMessage(){
+    QFile help(getExeDir().append("HELP.txt"));
+    QString message;
+    if (!help.open(QIODevice::ReadOnly)){
+        message = trUtf8("找不到目录下的HELP.txt");
+        QMessageBox::warning(this, trUtf8("找不到帮助文件"), message,
+                             QMessageBox::Ok);
+    }else{
+        QTextCodec *codec = QTextCodec::codecForName("utf-8");
+        message = codec->toUnicode(help.readAll());
+        QMessageBox::information(this, "Help", message,
+                                 QMessageBox::Information);
+    }
 }
 
 void LoginWindow::iconActivated(QSystemTrayIcon::ActivationReason reason){
@@ -355,15 +388,16 @@ void LoginWindow::hidePassword(){
     item->setText(QString(len,'*'));
 }
 
-QString LoginWindow::getExePath() const{
+QString LoginWindow::getExeDir() const{
+    // return format /dirname/ with tailing '/'
     char **argv = qApp->argv();
 //    qDebug() << argv[0];
     QString path(argv[0]);
     int index = path.lastIndexOf(QDir::separator());    // for splitting the name and the dir
     if (index != -1){
-        path = path.mid(0, index + 1).append(RECORD_FILE);  // because mid doesn't include the right-hand-side index
+        path = path.mid(0, index + 1);  // because mid doesn't include the right-hand-side index
     }else
-        path = RECORD_FILE;
+        path = "";
     return path;
 }
 
@@ -378,7 +412,7 @@ void LoginWindow::saveUsers(){
             continue;
         users << user_item->text() << passwd_item->data(Qt::UserRole).toString();
     }
-    QString path = getExePath();
+    QString path = getExeDir().append(RECORD_FILE);
     QFile file(path);
     if (!file.open(QIODevice::WriteOnly)){
         //qDebug() << "Can't open file" + RECORD_FILE;
@@ -391,7 +425,7 @@ void LoginWindow::saveUsers(){
 }
 
 void LoginWindow::loadUsers(){
-    QString path = getExePath();
+    QString path = getExeDir().append(RECORD_FILE);
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)){
         return;     // means no such file
