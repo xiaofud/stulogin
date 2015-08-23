@@ -17,12 +17,14 @@ SOURCES += main.cpp\
         loginwindow.cpp \
     stulogin.cpp \
     account.cpp \
-    suspendingwindow.cpp
+    suspendingwindow.cpp \
+    auxiliary.cpp
 
 HEADERS  += loginwindow.h \
     stulogin.h \
     account.h \
-    suspendingwindow.h
+    suspendingwindow.h \
+    auxiliary.h
 
 FORMS    += loginwindow.ui \
     suspendingwindow.ui

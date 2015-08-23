@@ -9,6 +9,7 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
 #include "suspendingwindow.h"
+#include "auxiliary.h"
 #include <QDebug>
 QString LoginWindow::USED_STR = QObject::trUtf8("已用流量:");
 QString LoginWindow::USER_STR = QObject::trUtf8("当前账号:");
@@ -194,8 +195,8 @@ void LoginWindow::updateState(bool connected, const QString &user, double used, 
     }
 
     currentUserName = user;
-    totalFlow = total;
-    leftFlow = left;
+    totalFlow = Auxiliary::setDecimalBit( total, 3);
+    leftFlow = Auxiliary::setDecimalBit( left, 3);
 
     // figure the speed
     QString speed_str;
@@ -203,10 +204,8 @@ void LoginWindow::updateState(bool connected, const QString &user, double used, 
     if (previousLeft != -1){    // means this is the first left data
         double diff = previousLeft - leftFlow;
         speed = ( diff * 1024 ) / 1.5;   // kbs
-        QString tmp = QString::number(speed);
-        if (tmp.length() - tmp.indexOf('.') >= 2)
-            tmp = tmp.mid(0, tmp.indexOf('.') + 3);     // [x, y) y not included
-        speed_str =/* trUtf8("速度: ") + */tmp + " kb/s";
+        speed = Auxiliary::setDecimalBit(speed, 3);
+        speed_str =/* trUtf8("速度: ") + */ QString::number(speed) + " kb/s";
         QMainWindow::statusBar()->showMessage(speed_str);
         previousLeft = leftFlow;
         emit newConnectionState(left, speed);
