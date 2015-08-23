@@ -184,8 +184,11 @@ void LoginWindow::showHelpMessage(){
     }else{
         QTextCodec *codec = QTextCodec::codecForName("utf-8");
         message = codec->toUnicode(help.readAll());
-        QMessageBox::information(this, "Help", message,
-                                 QMessageBox::Information);
+        QMessageBox msgBox(this);
+        msgBox.setTextFormat(Qt::RichText);     // hyper text link enabled
+        msgBox.setWindowTitle(tr("Help"));
+        msgBox.setText(message);
+        msgBox.exec();
     }
 }
 
