@@ -21,7 +21,8 @@ QString LoginWindow::LEFT_STR = QObject::trUtf8("<font color=red>剩余流量:</
 QString LoginWindow::DEFAULT_USER = "";
 QString LoginWindow::RECORD_FILE = "user.dat";
 QString LoginWindow::ICON_PATH = ":/images/icons/mainicon.png";
-double LoginWindow::thresholdValue = 1.0;   // 1.0 mb
+double LoginWindow::THRESHOLDVALUR = 1.0;   // 1.0 mb
+double LoginWindow::UPDATE_PERIOD = 1.5;  // 1.5 seconds
 
 
 LoginWindow::LoginWindow(QWidget *parent) :QMainWindow(parent), logining(false), shownRow(-1), shownCol(-1),previousLeft(-1){
@@ -29,16 +30,10 @@ LoginWindow::LoginWindow(QWidget *parent) :QMainWindow(parent), logining(false),
     loginAction = new STULogin(this);
     connect(loginAction, SIGNAL(stateChanged(bool,QString,double,double,double)),
             this, SLOT(updateState(bool,QString,double,double,double)));    // update the connetion state
-
     QMainWindow::setWindowIcon(QIcon(ICON_PATH));
 
-    smallWindow = new SuspendingWindow;
-    connect(this, SIGNAL(newConnectionState(double,double)),
-            smallWindow, SLOT(updateDisplay(double,double)));
-    connect(smallWindow, SIGNAL(doubleClicked()),
-            this, SLOT(show()));
-
-    // call helpers
+    // construction helper
+    setupSuspending();
     setupButtons();
     setupLineEdit();
     setupStyle();
@@ -49,8 +44,17 @@ LoginWindow::LoginWindow(QWidget *parent) :QMainWindow(parent), logining(false),
     setupTrayIcon();
     setupMenu();
     startup();
+
     smallWindow->show();
     smallWindow->showAtCorner();
+}
+
+void LoginWindow::setupSuspending(){
+    smallWindow = new SuspendingWindow;
+    connect(this, SIGNAL(newConnectionState(double,double)),
+            smallWindow, SLOT(updateDisplay(double,double)));
+    connect(smallWindow, SIGNAL(doubleClicked()),
+            this, SLOT(show()));
 }
 
 
@@ -59,11 +63,6 @@ void LoginWindow::setupStyle(){
     QString qss("border:2px groove gray;border-radius:10px;padding:2px 4px;");
     userLineEdit->setStyleSheet(qss);
     passwdLineEdit->setStyleSheet(qss);
-//    loginButton->setStyleSheet(qss);
-//    logoutButton->setStyleSheet(qss);
-//    defaultButton->setStyleSheet(qss);
-//    switchSpinBox->setStyleSheet(qss);
-//    userTableWidget->setStyleSheet(qss);
 }
 
 void LoginWindow::setupButtons(){
@@ -159,7 +158,7 @@ void LoginWindow::setupMenu(){
 
 void LoginWindow::startup(){
     stateTimer = new QTimer(this);   // update the state
-    stateTimer->setInterval(1500);
+    stateTimer->setInterval(UPDATE_PERIOD * 1000);     // update the state per UPDATE_PERIOD secs
     connect(stateTimer, SIGNAL(timeout()),
             loginAction, SLOT(getState()));
     stateTimer->start();
@@ -223,7 +222,7 @@ void LoginWindow::setupTrayIcon(){
 
 
 void LoginWindow::updateState(bool connected, const QString &user, double used, double total, double left){
-    if (!connected /*&& !logining */){   // insufficient logic
+    if (!connected){
         loginButton->setEnabled(true);
     }
     else{
@@ -239,7 +238,7 @@ void LoginWindow::updateState(bool connected, const QString &user, double used, 
     double speed;
     if (previousLeft != -1){    // means this is the first left data
         double diff = previousLeft - leftFlow;
-        speed = ( diff * 1024 ) / 1.5;   // kbs
+        speed = ( diff * 1024 ) / UPDATE_PERIOD;   // kbs
         speed = Auxiliary::setDecimalBit(speed, 3);
         speed_str =/* trUtf8("速度: ") + */ QString::number(speed) + " kb/s";
         QMainWindow::statusBar()->showMessage(speed_str);

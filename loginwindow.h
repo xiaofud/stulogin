@@ -56,6 +56,7 @@ private:
     /*-------------------*
      * constructor helper*
      *-------------------*/
+    void setupSuspending();
     void setupButtons();
     void setupLineEdit();
     void setupUserTableView();
@@ -87,8 +88,8 @@ private:
     QString currentUserName;
     QList<Account> accounts;    // contains all the accouts
 
-    static double thresholdValue;   // if left flow is less than this consider to change the account.
-
+    static double THRESHOLDVALUR;   // if left flow is less than this consider to change the account.
+    static double UPDATE_PERIOD;
     // some string constant
     static QString USER_STR;
     static QString USED_STR;

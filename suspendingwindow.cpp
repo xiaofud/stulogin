@@ -8,7 +8,7 @@
 #include <QRect>
 #include "suspendingwindow.h"
 #include "ui_suspendingwindow.h"
-#include <QDebug>
+//#include <QDebug>
 
 void SuspendingWindow::showAtCorner(){
     QDesktopWidget *desktop = qApp->desktop();
