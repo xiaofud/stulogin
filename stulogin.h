@@ -30,6 +30,8 @@ public slots:
     void changeAccount();   // switch the account
     void resetAllAccounts();
     void delayForSomeTime(int ms);
+    QNetworkReply *syncHttpPost(const QNetworkRequest & request, const QByteArray & data);
+    QNetworkReply *syncHttpGet(const QNetworkRequest &request);
 
 private slots:
     void clearErrorCount();

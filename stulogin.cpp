@@ -29,6 +29,25 @@ thresholdValue(1), ptr_account(-1){
 
 }
 
+QNetworkReply *STULogin::syncHttpPost(const QNetworkRequest &request, const QByteArray &data){
+    QEventLoop eventLoop;   // for synchronization the post and stay interactive GUI
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
+            &eventLoop, SLOT(quit()));
+    QNetworkReply *reply = manager->post(request, data);
+    eventLoop.exec();
+    return reply;
+}
+
+QNetworkReply *STULogin::syncHttpGet(const QNetworkRequest &request){
+    QEventLoop eventLoop;
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
+            &eventLoop, SLOT(quit()));
+    QNetworkReply *reply = manager->get(request);
+    eventLoop.exec();
+    return reply;
+}
+
+
 void STULogin::logout(){
     logining = false;   // need this flag becuase the school server sucks
     wrongCount = 0;
@@ -39,12 +58,7 @@ void STULogin::logout(){
     QNetworkRequest request(*requestAddr);
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       "application/x-www-form-urlencoded");
-    QEventLoop eventLoop;   // for synchronization
-    connect(manager, SIGNAL(finished(QNetworkReply*)),
-            &eventLoop, SLOT(quit()));
-    QNetworkReply *reply = manager->post(request, postData);
-    eventLoop.exec();
-    // means that the reply is ready to be read
+    QNetworkReply *reply = syncHttpPost(request, postData);
     handleReply(reply);
     processStates(replyData);
     if (is_connected && autoChange && left <= thresholdValue)
@@ -74,13 +88,8 @@ void STULogin::login(const QString &user, const QString &passwd){
     QNetworkRequest request(*requestAddr);
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       "application/x-www-form-urlencoded");
-    QEventLoop eventLoop;   // for synchronization
-    connect(manager, SIGNAL(finished(QNetworkReply*)),
-            &eventLoop, SLOT(quit()));
     delayForSomeTime(600);
-    QNetworkReply *reply = manager->post(request, postData);
-    eventLoop.exec();
-    // means that the reply is ready to be read
+    QNetworkReply *reply = syncHttpPost(request, postData);
     handleReply(reply);
     processStates(replyData);
     emit stateChanged(is_connected,user,used,total,left);
@@ -100,13 +109,7 @@ void STULogin::handleReply(QNetworkReply *reply){
 
 
 void STULogin::getState(){
-    //askingForState = true;
-    QNetworkReply *reply = manager->get(QNetworkRequest(QUrl(LOGIN_REQUEST_ADDR)));     // asynchronously
-    QEventLoop eventLoop;   // for synchronization
-    connect(manager, SIGNAL(finished(QNetworkReply*)),
-            &eventLoop, SLOT(quit()));
-    eventLoop.exec();
-    // means that the reply is ready to be read
+    QNetworkReply *reply = syncHttpGet(QNetworkRequest(QUrl(LOGIN_REQUEST_ADDR)));     // asynchronously
     handleReply(reply);
     processStates(replyData);
     emit stateChanged(is_connected,user,used,total,left);
