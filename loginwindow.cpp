@@ -258,7 +258,7 @@ void LoginWindow::updateState(bool connected, const QString &user, double used, 
 //    int left_int = (int) left;
     QString title = connected ? QString::number((int) left) + "MB": "not connected yet";
     setWindowTitle(title + "|" + speed_str + "|" + user );
-    usedLabel->setText(this->USED_STR + QString::number(used) + "MB");
+    usedLabel->setText(this->USED_STR + QString::number(Auxiliary::setDecimalBit(used, 3)) + "MB");
     nowUserLabel->setText(this->USER_STR + user);
     totalLabel->setText(this->TOTAL_STR + QString::number(total) + "MB");
     leftLabel->setText(this->LEFT_STR + QString::number(left)  + "MB");
