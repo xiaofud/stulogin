@@ -20,7 +20,7 @@ QString STULogin::CONNECTED = "Used bytes";
 int STULogin::CONVERT_RATE = 1024 * 1024;
 int STULogin::MAX_ERROR_COUNT = 10;
 
-STULogin::STULogin(QObject *parent): QObject(parent), is_connected(false), autoChange(false), stopChaneing(false), logining(false),
+STULogin::STULogin(QObject *parent): QObject(parent), is_connected(false), autoChange(false), stopChaneing(false), bad_connection(false), logining(false),
 thresholdValue(1), ptr_account(-1){
     manager = new QNetworkAccessManager(this);
     codec = QTextCodec::codecForName("utf-8");
@@ -102,9 +102,14 @@ void STULogin::handleReply(QNetworkReply *reply){
     reply->deleteLater();
     QString info = codec->toUnicode(response);
     replyData = info;
-    //qDebug() << used;
+    if (replyData.isEmpty()){   // bad connection
+        emit badConnection();
+        emit stateChanged(false, "", 0, 0 ,0);
+        bad_connection = true;
+    }
     manager->setNetworkAccessible(
                 QNetworkAccessManager::Accessible);
+    return;
 }
 
 
@@ -125,13 +130,14 @@ void STULogin::processStates(const QString &data){
 
     if (data.contains(CONNECTED)){      // succeed to login
         is_connected = true;
+        bad_connection = false;
         wrongCount = 0;
     }
     else if (/* data.contains(INVALID) && */ logining == true){     // because after logout, the server page contains
                                                                     // the warnning const string
         logining = false;
         if (++wrongCount >= MAX_ERROR_COUNT){  // the server sucks
-            if(!is_connected)
+            if(!is_connected && !bad_connection)
                 QMessageBox::warning(0 ,trUtf8("错误"), trUtf8("账号或密码错误"), QMessageBox::Ok);
 //                qDebug() << "username/password may be wrong";
             wrongCount = 0;

@@ -16,8 +16,11 @@ public:
     bool isConnected() const {return is_connected;}
 
     void processStates(const QString &data);
+
+
 signals:
     void stateChanged(bool connected,const QString &user, double used, double total, double left);
+    void badConnection();   // emited when the connection is over
 
 public slots:
     void logout();
@@ -46,6 +49,7 @@ private:
     bool is_connected;
     bool autoChange;
     bool stopChaneing;
+    bool bad_connection;
     mutable bool logining;  // bool for clicking button
     int wrongCount;
     QString user;

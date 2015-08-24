@@ -38,6 +38,8 @@ public slots:
     void openSTUEmail();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void exit();
+
+
 private slots:
     void addRow(const QString &USER_STR = QString(), const QString &passwd = QString(), bool sendSignal = true);
     void deleteRow();
@@ -45,10 +47,12 @@ private slots:
     void hidePassword();
     void editAccountLineEdit(int);     // change the current input of the account
     void showHelpMessage();
-
+    void showConnectionError();
 signals:
     void accountChanged(const QList<Account> &list);
     void newConnectionState(double left, double speed);
+
+
 private:
     void saveUsers();
     void loadUsers();

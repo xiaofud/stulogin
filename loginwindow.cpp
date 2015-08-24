@@ -32,6 +32,9 @@ LoginWindow::LoginWindow(QWidget *parent) :QMainWindow(parent), logining(false),
             this, SLOT(updateState(bool,QString,double,double,double)));    // update the connetion state
     QMainWindow::setWindowIcon(QIcon(ICON_PATH));
 
+    connect(loginAction, SIGNAL(badConnection()),
+            this, SLOT(showConnectionError()));
+
     // construction helper
     setupSuspending();
     setupButtons();
@@ -499,4 +502,8 @@ void LoginWindow::updateAccountToTable(){
 
 void LoginWindow::openSTUEmail(){
     QDesktopServices::openUrl(QUrl("http://webmail.stu.edu.cn/"));
+}
+
+void LoginWindow::showConnectionError(){
+    QMessageBox::warning(this, trUtf8("网络连接有问题"), trUtf8("不能连接到网络，请检查网络设置"), QMessageBox::Ok);
 }
