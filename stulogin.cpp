@@ -1,10 +1,10 @@
-﻿#include "stulogin.h"
-#include <QNetworkRequest>
+﻿#include <QNetworkRequest>
 #include <QMessageBox>
 #include <QTextCodec>
 #include <QDebug>
 #include <QTimer>
 #include <QEventLoop>
+#include "stulogin.h"
 QString STULogin::LOGIN_REQUEST_ADDR = "http://192.168.31.4:8080/?url=" ;
 QString STULogin::LOGOUT_REQUEST_ADDR = "http://192.168.31.4:8080/?status=ok&url=";
 QString STULogin::USERNAME_INPUT = "AuthenticateUser";
@@ -115,27 +115,30 @@ void STULogin::getState(){
     emit stateChanged(is_connected,user,used,total,left);
 }
 
+
+// this function process the reply data and deal with all possible situations
 void STULogin::processStates(const QString &data){
     // reset to default
     user = "";
     total = left = used = 0.0;
     is_connected = false;
 
-    if (data.contains(CONNECTED)){
+    if (data.contains(CONNECTED)){      // succeed to login
         is_connected = true;
         wrongCount = 0;
     }
-    else if (/* data.contains(INVALID) && */ logining == true){
+    else if (/* data.contains(INVALID) && */ logining == true){     // because after logout, the server page contains
+                                                                    // the warnning const string
         logining = false;
         if (++wrongCount >= MAX_ERROR_COUNT){  // the server sucks
             if(!is_connected)
                 QMessageBox::warning(0 ,trUtf8("错误"), trUtf8("账号或密码错误"), QMessageBox::Ok);
-                qDebug() << "username/password may be wrong";
+//                qDebug() << "username/password may be wrong";
             wrongCount = 0;
             return;
         }
 
-        login();
+        login();    // keep trying to login
         return;
     }
     else{   // i.e. pressed logout button
@@ -150,17 +153,13 @@ void STULogin::processStates(const QString &data){
         states << data.mid(index, index_end - index);
     }
     user = states[0];
-
     used = states[1].replace(",","").toDouble() / CONVERT_RATE;     // from bytes to mb
-    //qDebug() << used;
     total = states[2].replace(",","").toDouble() / CONVERT_RATE;
-
     left = total - used;
-
     if (autoChange == true && is_connected && left <= thresholdValue){
         if (stopChaneing == true)
             return;
-        qDebug()<<"start changing account the original user is " + user + "\t and the flow_left is " + QString::number(left);
+//        qDebug()<<"start changing account the original user is " + user + "\t and the flow_left is " + QString::number(left);
         changeAccount();
     }
 
@@ -197,7 +196,7 @@ void STULogin::setAutoChangeState(bool state){
 void STULogin::changeAccount(){
     int nextUserIndex = getNextFreshAccount();
     if (nextUserIndex == -1){
-        qDebug() << "No more accounts available!";
+//        qDebug() << "No more accounts available!";
         stopChaneing = true;
         return;
     }
