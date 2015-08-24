@@ -7,9 +7,6 @@ user.dat
 # some backup
 *.rar
 
-# resource folder no need to upload
-/resource/
-
 # under development
 Xiaojing
 

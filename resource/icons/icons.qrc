@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/images/icons">
+        <file>mainicon.png</file>
+    </qresource>
+</RCC>

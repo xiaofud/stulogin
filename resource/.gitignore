@@ -1,0 +1,7 @@
+# no need to upload
+/actions
+
+*.png
+*.ico
+*.gif
+!mainicon.png
