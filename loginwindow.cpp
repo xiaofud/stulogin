@@ -394,16 +394,15 @@ void LoginWindow::hidePassword(){
 }
 
 QString LoginWindow::getExeDir() const{
-    // return format /dirname/ with tailing '/'
-    char **argv = qApp->argv();
-//    qDebug() << argv[0];
-    QString path(argv[0]);
-    int index = path.lastIndexOf(QDir::separator());    // for splitting the name and the dir
-    if (index != -1){
-        path = path.mid(0, index + 1);  // because mid doesn't include the right-hand-side index
-    }else
-        path = "";
-    return path;
+//    // return format /dirname/ with tailing '/'
+//    char **argv = qApp->argv();
+//    QString path(argv[0]);
+//    int index = path.lastIndexOf(QDir::separator());    // for splitting the name and the dir
+//    if (index != -1){
+//        path = path.mid(0, index + 1);  // because mid doesn't include the right-hand-side index
+//    }else
+//        path = "";
+    return qApp->applicationDirPath() + QDir::separator();
 }
 
 
