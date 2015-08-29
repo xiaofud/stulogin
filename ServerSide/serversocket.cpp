@@ -16,6 +16,8 @@ ServerSocket::~ServerSocket(){
 void ServerSocket::incomingConnection(int sfd){
     // use threadpool to do tasks
     ActionToClient *action = new ActionToClient(sfd);
+    connect(action, SIGNAL(accountPushed(QString,QString)),
+            this, SLOT(emitAccount(QString,QString)));
     action->setAutoDelete(true);
     pool->start(action);
     qDebug() << "a client 's coming!";

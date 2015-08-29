@@ -21,8 +21,11 @@ ServerWidget::ServerWidget(QWidget *parent) :QWidget(parent),ui(new Ui::ServerWi
     ui->view->resizeColumnsToContents();
 
     connect(ui->addEntryButton, SIGNAL(clicked(bool)),
-            this, SLOT(addEntry()));
+            this, SLOT(addEntryFromLineEdit()));
+
     server = new ServerSocket(this);
+    connect(server, SIGNAL(accountPushed(QString,QString)),
+            this, SLOT(addEntry(QString,QString)));
     server->startServer();
 
 }
@@ -36,12 +39,16 @@ QString ServerWidget::addQuotes(const QString &str){
     return "'" + str + "'";
 }
 
-bool ServerWidget::addEntry(){
-    QString username = addQuotes( ui->userLineEdit->text() );
-    QString passwd = addQuotes(ui->passwdLineEdit->text());
-    if(tableManager->insertValues("account", username + "," + passwd)){
+bool ServerWidget::addEntry(const QString &username, const QString &passwd){
+    if(tableManager->insertValues("account", addQuotes( username ) + "," + addQuotes( passwd ))){
         tableModel->select();
         return true;
     }else
         return false;
+}
+
+bool ServerWidget::addEntryFromLineEdit(){
+    QString username =  ui->userLineEdit->text();
+    QString passwd = ui->passwdLineEdit->text();
+    return addEntry(username, passwd);
 }

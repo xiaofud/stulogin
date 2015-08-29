@@ -20,9 +20,11 @@ public:
     ~ServerWidget();
 
 public slots:
-    bool addEntry();
+    bool addEntryFromLineEdit();
+    bool addEntry(const QString &username, const QString &passwd);
 
 private:
+
     QString addQuotes(const QString &str);
     Ui::ServerWidget *ui;
     QSQLiteDataBaseManager *tableManager;
