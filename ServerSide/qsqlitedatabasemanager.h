@@ -3,7 +3,9 @@
 #include <QString>
 #include <QSqlQuery>
 #include <QSqlDatabase>
-class QSQLiteDataBaseManager{
+#include <QObject>
+class QSQLiteDataBaseManager : public QObject{
+    Q_OBJECT
 public:
     // some constants
     const static QString  DATA_BASE_DRIVER;
@@ -15,6 +17,8 @@ public:
     const QSqlDatabase getDatabase();
     bool createTable(const QString &tableName, const QString &fields);
     bool insertValues(const QString &tableName, const QString &values, const QString &fieldNames = QString());
+
+
 private:
     QSqlQuery *query;
     QSqlDatabase dataBase;

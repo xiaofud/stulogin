@@ -21,8 +21,13 @@ public:
 public slots:
     void pullAccount();
     void pushAccount();
-    void enableButtons();
+    void handleConnection();
+    void handleDisconnection();
+    bool connectToHost(const QString &addr, int port);
+    bool sendData();
+    void displayError(QAbstractSocket::SocketError err);
 private:
+    bool isConnected;
     Ui::ClientDialog *ui;
     QTcpSocket *clientSocket;
     QStringList strList;

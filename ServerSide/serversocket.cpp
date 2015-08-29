@@ -30,3 +30,7 @@ bool ServerSocket::startServer(){
     }
 
 }
+
+void ServerSocket::emitAccount(QString user, QString passwd){
+    emit accountPushed(user, passwd);
+}

@@ -42,6 +42,7 @@ public slots:
 signals:
     void jobFinished();    // quit the local event loop
     void finishedRead();
+    void accountPushed(QString user, QString passwd);   // client sent the account
 
 protected:
     void run();

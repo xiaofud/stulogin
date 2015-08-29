@@ -11,6 +11,11 @@ public:
     ~ServerSocket();
     bool startServer();
 
+public slots:
+    void emitAccount(QString user, QString passwd);
+
+signals:
+    void accountPushed(QString user, QString passwd);   // client sent the account
 
 protected:
     void incomingConnection(int sfd);

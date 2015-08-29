@@ -80,7 +80,8 @@ bool ActionToClient::sendAccount(){
 bool ActionToClient::addAccountToDataBase(){
     QString username = clientRequest[1];
     QString passwd = clientRequest[2];
-    qDebug() << "adding" + username + "," + passwd + " to database!";
+    qDebug() << "adding " + username + "," + passwd + " to database!";
+    emit accountPushed(username, passwd);
     return true;
 }
 

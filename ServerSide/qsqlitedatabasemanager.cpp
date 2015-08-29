@@ -76,3 +76,4 @@ bool QSQLiteDataBaseManager::insertValues(const QString &tableName, const QStrin
 
 
 
+
