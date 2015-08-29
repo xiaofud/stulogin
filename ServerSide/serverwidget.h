@@ -25,7 +25,7 @@ private:
     QString addQuotes(const QString &str);
     Ui::ServerWidget *ui;
     QSQLiteDataBaseManager *tableManager;
-    const QSqlDatabase *database;
+    QSqlDatabase database;
     QSqlTableModel *tableModel;
 };
 

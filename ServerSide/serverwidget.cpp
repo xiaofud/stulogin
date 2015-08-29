@@ -10,7 +10,7 @@ ServerWidget::ServerWidget(QWidget *parent) :QWidget(parent),ui(new Ui::ServerWi
     tableManager->openDatabase();
     tableManager->createTable("account", "username INT NOT NULL UNIQUE, passwd char(20)");
     database = tableManager->getDatabase();
-    tableModel = new QSqlTableModel(this, *database);
+    tableModel = new QSqlTableModel(this, database);
     tableModel->setEditStrategy(QSqlTableModel::OnFieldChange);
     tableModel->setTable("account");
     tableModel->select();

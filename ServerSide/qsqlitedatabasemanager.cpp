@@ -25,8 +25,8 @@ bool QSQLiteDataBaseManager::openDatabase(){
     }
 }
 
-const QSqlDatabase *QSQLiteDataBaseManager::getDatabase(){
-    return &dataBase;
+const QSqlDatabase QSQLiteDataBaseManager::getDatabase(){
+    return dataBase;
 }
 
 

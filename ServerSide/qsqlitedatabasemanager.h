@@ -13,7 +13,7 @@ public:
                         const QString& driverName = "QSQLITE");
 
     bool openDatabase();
-    const QSqlDatabase *getDatabase();
+    const QSqlDatabase getDatabase();
     bool createTable(const QString &tableName, const QString &fields);
     bool insertValues(const QString &tableName, const QString &values, const QString &fieldNames = QString());
 private:
