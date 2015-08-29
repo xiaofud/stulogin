@@ -48,7 +48,7 @@ protected:
 private:
     bool sendAccount();     // send account to client
     bool addAccountToDataBase();
-    void startup();     // create the TcpSocket and connect some signal and slots
+//    void startup();     // create the TcpSocket and connect some signal and slots
     int socketDescriptor;
     QByteArray data;
     QTcpSocket *client;

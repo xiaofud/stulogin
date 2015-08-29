@@ -4,11 +4,15 @@
 #include <QDataStream>
 
 ActionToClient::ActionToClient(int sfd): socketDescriptor(sfd){
-
+//! must, qint16 won't be set to zero automatically!!!!!!!!!!!!!!!!!!
+    qDebug() << totalSize << " , " << bytesRead;
+    totalSize = 0;
+    bytesRead = 0;
 }
 
 
 void ActionToClient::run(){
+    qDebug() << "handling a client";
     client = new QTcpSocket;
     if (!client->setSocketDescriptor(socketDescriptor)){
         qDebug() << client->errorString();
@@ -36,12 +40,14 @@ ActionToClient::~ActionToClient(){
 }
 
 void ActionToClient::readFromClient(){
-
+//    qDebug() << "starting reading data totalSize =" << totalSize << " bytesRead = " + bytesRead;
     QDataStream in(client);
+    in.setVersion(QDataStream::Qt_4_8);
     // get the total size this connection need to read
     if (totalSize == 0 ){
         if (client->bytesAvailable() >= sizeof(qint16)){
             in >> totalSize;
+//            qDebug() << "the total size is " << totalSize;
             bytesRead += sizeof(qint16);
         }else
             return;     // means the size info has not been complete yet
@@ -50,6 +56,7 @@ void ActionToClient::readFromClient(){
     if (bytesRead + client->bytesAvailable() == totalSize){     // all data is already
         in >> clientRequest;
         emit finishedRead();
+        bytesRead = totalSize = 0;
         return;
     }else
         return;     // wait for more data coming

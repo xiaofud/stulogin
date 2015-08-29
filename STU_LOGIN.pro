@@ -20,8 +20,7 @@ SOURCES += main.cpp\
     suspendingwindow.cpp \
     auxiliary.cpp \
     exaccount.cpp \
-    clientdialog.cpp \
-    clientsocket.cpp
+    clientdialog.cpp
 
 HEADERS  += loginwindow.h \
     stulogin.h \
@@ -29,8 +28,7 @@ HEADERS  += loginwindow.h \
     suspendingwindow.h \
     auxiliary.h \
     exaccount.h \
-    clientdialog.h \
-    clientsocket.h
+    clientdialog.h
 
 FORMS    += loginwindow.ui \
     suspendingwindow.ui \

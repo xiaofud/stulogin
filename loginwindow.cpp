@@ -34,7 +34,7 @@ LoginWindow::LoginWindow(QWidget *parent) :QMainWindow(parent), logining(false),
 
     connect(loginAction, SIGNAL(badConnection()),
             this, SLOT(showConnectionError()));
-
+    shareDialog = new ClientDialog(this);
     // construction helper
     setupSuspending();
     setupButtons();
@@ -62,7 +62,7 @@ void LoginWindow::setupSuspending(){
 }
 
 void LoginWindow::showClientWindow(){
-    shareDialog = new ClientDialog(this);
+
     shareDialog->setWindowTitle(trUtf8("共享界面"));
     shareDialog->show();
 }

@@ -18,6 +18,7 @@ void ServerSocket::incomingConnection(int sfd){
     ActionToClient *action = new ActionToClient(sfd);
     action->setAutoDelete(true);
     pool->start(action);
+    qDebug() << "a client 's coming!";
 }
 
 bool ServerSocket::startServer(){
