@@ -22,6 +22,8 @@ ServerWidget::ServerWidget(QWidget *parent) :QWidget(parent),ui(new Ui::ServerWi
 
     connect(ui->addEntryButton, SIGNAL(clicked(bool)),
             this, SLOT(addEntry()));
+    server = new ServerSocket(this);
+    server->startServer();
 }
 
 ServerWidget::~ServerWidget(){

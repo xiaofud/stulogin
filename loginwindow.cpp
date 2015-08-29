@@ -50,6 +50,7 @@ LoginWindow::LoginWindow(QWidget *parent) :QMainWindow(parent), logining(false),
 
     smallWindow->show();
     smallWindow->showAtCorner();
+
 }
 
 void LoginWindow::setupSuspending(){
@@ -60,6 +61,11 @@ void LoginWindow::setupSuspending(){
             this, SLOT(show()));
 }
 
+void LoginWindow::showClientWindow(){
+    shareDialog = new ClientDialog(this);
+    shareDialog->setWindowTitle(trUtf8("共享界面"));
+    shareDialog->show();
+}
 
 
 void LoginWindow::setupStyle(){
@@ -89,6 +95,10 @@ void LoginWindow::setupButtons(){
 
     connect(adduserButton, SIGNAL(clicked()),
             this, SLOT(addRow()));
+
+    // shareButton
+    connect(sharedButton, SIGNAL(clicked(bool)),
+            this, SLOT(showClientWindow()));
 
 }
 

@@ -1,8 +1,9 @@
 ﻿#ifndef SERVERWIDGET_H
 #define SERVERWIDGET_H
-#include "qsqlitedatabasemanager.h"
 #include <QWidget>
 #include <QSqlTableModel>
+#include "qsqlitedatabasemanager.h"
+#include "serversocket.h"
 
 namespace Ui {
 class ServerWidget;
@@ -27,6 +28,7 @@ private:
     QSQLiteDataBaseManager *tableManager;
     QSqlDatabase database;
     QSqlTableModel *tableModel;
+    ServerSocket *server;
 };
 
 #endif // SERVERWIDGET_H

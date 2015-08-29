@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>410</width>
-    <height>369</height>
+    <width>424</width>
+    <height>384</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -215,6 +215,13 @@
         </layout>
        </item>
       </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="sharedButton">
+      <property name="text">
+       <string>分享</string>
+      </property>
      </widget>
     </item>
    </layout>

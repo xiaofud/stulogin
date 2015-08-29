@@ -19,17 +19,22 @@ SOURCES += main.cpp\
     account.cpp \
     suspendingwindow.cpp \
     auxiliary.cpp \
-    exaccount.cpp
+    exaccount.cpp \
+    clientdialog.cpp \
+    clientsocket.cpp
 
 HEADERS  += loginwindow.h \
     stulogin.h \
     account.h \
     suspendingwindow.h \
     auxiliary.h \
-    exaccount.h
+    exaccount.h \
+    clientdialog.h \
+    clientsocket.h
 
 FORMS    += loginwindow.ui \
-    suspendingwindow.ui
+    suspendingwindow.ui \
+    clientdialog.ui
 
 RESOURCES += \
     resource/icons/icons.qrc

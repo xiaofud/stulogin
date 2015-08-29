@@ -3,7 +3,6 @@
 #include <QString>
 #include <QSqlQuery>
 #include <QSqlDatabase>
-
 class QSQLiteDataBaseManager{
 public:
     // some constants

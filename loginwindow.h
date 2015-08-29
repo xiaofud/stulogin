@@ -9,6 +9,7 @@
 #include "stulogin.h"
 #include "account.h"
 #include "suspendingwindow.h"
+#include "clientdialog.h"
 
 class QSettings;
 class QTimer;
@@ -48,6 +49,7 @@ private slots:
     void editAccountLineEdit(int);     // change the current input of the account
     void showHelpMessage();
     void showConnectionError();
+    void showClientWindow();
 signals:
     void accountChanged(const QList<Account> &list);
     void newConnectionState(double left, double speed);
@@ -80,6 +82,7 @@ private:
     QAction *exitAction;
     QAction *showSuspendingWin;
     SuspendingWindow *smallWindow;
+    ClientDialog *shareDialog;
     QMenu *aboutMenu;
     QAction *helpAction;
     QAction *aboutQt;

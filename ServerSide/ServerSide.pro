@@ -16,11 +16,13 @@ SOURCES += main.cpp\
         serverwidget.cpp \
     exaccount.cpp \
     qsqlitedatabasemanager.cpp \
-    serversocket.cpp
+    serversocket.cpp \
+    actiontoclient.cpp
 
 HEADERS  += serverwidget.h \
     exaccount.h \
     qsqlitedatabasemanager.h \
-    serversocket.h
+    serversocket.h \
+    actiontoclient.h
 
 FORMS    += serverwidget.ui
