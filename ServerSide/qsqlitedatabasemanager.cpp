@@ -1,10 +1,10 @@
 ﻿#include <QDebug>
 #include <QSqlError>
-#include "qsqlitetablemanager.h"
+#include "qsqlitedatabasemanager.h"
 
-const QString QSQLiteTableManager::DATA_BASE_DRIVER = "QSQLITE";
+const QString QSQLiteDataBaseManager::DATA_BASE_DRIVER = "QSQLITE";
 
-QSQLiteTableManager::QSQLiteTableManager
+QSQLiteDataBaseManager::QSQLiteDataBaseManager
     (const QString &dbName, const QString &connName, const QString &driver_Name)
         : dataBaseName(dbName), connectionName(connName), driverName(driver_Name)
 {
@@ -13,7 +13,7 @@ QSQLiteTableManager::QSQLiteTableManager
 
 
 // open the database for use
-bool QSQLiteTableManager::openDatabase(){
+bool QSQLiteDataBaseManager::openDatabase(){
     dataBase = QSqlDatabase::addDatabase(driverName, connectionName);
     dataBase.setDatabaseName(dataBaseName);
     if (dataBase.open()){
@@ -25,14 +25,14 @@ bool QSQLiteTableManager::openDatabase(){
     }
 }
 
-const QSqlDatabase *QSQLiteTableManager::getDatabase(){
+const QSqlDatabase *QSQLiteDataBaseManager::getDatabase(){
     return &dataBase;
 }
 
 
 // usage:
 // eg. createTable("person", "id INT PRIMARY KEY UNIQUE, name char(20)")
-bool QSQLiteTableManager::createTable(const QString &tableName, const QString &fields){
+bool QSQLiteDataBaseManager::createTable(const QString &tableName, const QString &fields){
     QString createStatement = "CREATE TABLE " + tableName + " (" + fields + ")";
     if (query == 0)
         return false;
@@ -46,7 +46,7 @@ bool QSQLiteTableManager::createTable(const QString &tableName, const QString &f
 
 
 
-bool QSQLiteTableManager::insertValues(const QString &tableName, const QString &values, const QString &fieldNames){
+bool QSQLiteDataBaseManager::insertValues(const QString &tableName, const QString &values, const QString &fieldNames){
     if (query == 0)
         return false;
     QString insertStatement;

@@ -1,6 +1,6 @@
 ﻿#ifndef SERVERWIDGET_H
 #define SERVERWIDGET_H
-#include "qsqlitetablemanager.h"
+#include "qsqlitedatabasemanager.h"
 #include <QWidget>
 #include <QSqlTableModel>
 
@@ -24,7 +24,7 @@ public slots:
 private:
     QString addQuotes(const QString &str);
     Ui::ServerWidget *ui;
-    QSQLiteTableManager *tableManager;
+    QSQLiteDataBaseManager *tableManager;
     const QSqlDatabase *database;
     QSqlTableModel *tableModel;
 };

@@ -4,12 +4,12 @@
 #include <QSqlQuery>
 #include <QSqlDatabase>
 
-class QSQLiteTableManager{
+class QSQLiteDataBaseManager{
 public:
     // some constants
     const static QString  DATA_BASE_DRIVER;
 
-    QSQLiteTableManager(const QString &dataBaseName, const QString &connectionName,
+    QSQLiteDataBaseManager(const QString &dataBaseName, const QString &connectionName,
                         const QString& driverName = "QSQLITE");
 
     bool openDatabase();

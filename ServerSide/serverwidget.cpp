@@ -6,7 +6,7 @@ const QString ServerWidget::CONNECTION_NAME = "server_connection";
 
 ServerWidget::ServerWidget(QWidget *parent) :QWidget(parent),ui(new Ui::ServerWidget){
     ui->setupUi(this);
-    tableManager = new QSQLiteTableManager(DATA_BASE_NAME, CONNECTION_NAME);
+    tableManager = new QSQLiteDataBaseManager(DATA_BASE_NAME, CONNECTION_NAME);
     tableManager->openDatabase();
     tableManager->createTable("account", "username INT NOT NULL UNIQUE, passwd char(20)");
     database = tableManager->getDatabase();

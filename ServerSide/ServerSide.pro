@@ -15,10 +15,10 @@ TEMPLATE = app
 SOURCES += main.cpp\
         serverwidget.cpp \
     exaccount.cpp \
-    qsqlitetablemanager.cpp
+    qsqlitedatabasemanager.cpp
 
 HEADERS  += serverwidget.h \
     exaccount.h \
-    qsqlitetablemanager.h
+    qsqlitedatabasemanager.h
 
 FORMS    += serverwidget.ui
