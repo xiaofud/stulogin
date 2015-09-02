@@ -2,7 +2,7 @@
 #define SERVERWIDGET_H
 #include <QWidget>
 #include <QSqlTableModel>
-#include <exaccount.h>
+#include "exaccount.h"
 #include "qsqlitedatabasemanager.h"
 #include "serversocket.h"
 
@@ -25,13 +25,17 @@ public slots:
     bool addEntry(const ExAccount &accout);
     bool updataEntryFromButton();
     bool updateEntry(const ExAccount &account);
+    ExAccount selectUser(const QString &name);
+
+signals:
+    void selectedAccount(ExAccount account);
 
 private:
+    Ui::ServerWidget *ui;
     static QString TABLENAME;
     static QString COLUMNS;
     static QString FIELDS;
     QString addQuotes(const QString &str);
-    Ui::ServerWidget *ui;
     QSQLiteDataBaseManager *tableManager;
     QSqlDatabase database;
     QSqlTableModel *tableModel;

@@ -5,7 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QUrl>
 #include <QNetworkReply>
-#include "account.h"
+#include "exaccount.h"
 
 class QTextCodec;
 class QTimer;
@@ -27,7 +27,7 @@ public slots:
     void login(const QString &user, const QString &passwd);
     void handleReply(QNetworkReply *reply);
     void getState();
-    void setAccounts(QList<Account> *accounts);
+    void setAccounts(QList<ExAccount> *accounts);
     void setThresholdValue(int);
     void setAutoChangeState(bool);
     void changeAccount();   // switch the account
@@ -60,8 +60,9 @@ private:
     double left;
     double thresholdValue;  // when to switch the account
     QTimer *delayTimer;
-    QList<Account> *allAccounts;
+    QList<ExAccount> *allAccounts;
     int ptr_account;    // point to which account's being used start from zero
+//    ExAccount current_user;
 
 /******************************/
     static QString LOGIN_REQUEST_ADDR;      // where to send the request to login

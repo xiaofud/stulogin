@@ -8,6 +8,7 @@
 #include "ui_loginwindow.h"
 #include "stulogin.h"
 #include "account.h"
+#include "exaccount.h"
 #include "suspendingwindow.h"
 #include "clientdialog.h"
 
@@ -51,7 +52,7 @@ private slots:
     void showConnectionError();
     void showClientWindow();
 signals:
-    void accountChanged(QList<Account> *list);
+    void accountChanged(QList<ExAccount> *list);
     void newConnectionState(double left, double speed);
 
 
@@ -95,7 +96,8 @@ private:
     double totalFlow;
     double leftFlow;    // left flow
     QString currentUserName;
-    QList<Account> accounts;    // contains all the accouts
+    QList<ExAccount> accounts;    // contains all the accouts
+    ExAccount cur_account;
 
     static double THRESHOLDVALUR;   // if left flow is less than this consider to change the account.
     static double UPDATE_PERIOD;

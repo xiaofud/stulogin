@@ -34,11 +34,11 @@ public:
     QList<double> numberFields;
     void fromStrFields(QList<QString> strList);
     void fromNumFields(QList<double> numList);
-
+    void toStrFileds() ;    // if you changed the properties, remember to update the list
+    void toNumFields() ;
 
 private:
-    void toStrFileds() ;
-    void toNumFields() ;
+
 
 
 

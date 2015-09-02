@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QByteArray>
 #include <QStringList>
+#include "exaccount.h"
 /** this class handles the client's request
  * 1.pull data from the server.
  * 2.push data to the server
@@ -39,19 +40,26 @@ public slots:
     void readFromClient();
     void reactToClient();
     void clientDisconnected();
+    bool sendAccount(ExAccount account);
+
 signals:
     void jobFinished();    // quit the local event loop
     void finishedRead();
     void accountPushed(QString user, QString passwd);   // client sent the account
+//    void receivedAccount(ExAccount &account);
+    void needAccount(const QString &name);
+
 
 protected:
     void run();
 private:
     bool sendAccount();     // send account to client
+
     bool addAccountToDataBase();
 //    void startup();     // create the TcpSocket and connect some signal and slots
     int socketDescriptor;
     QByteArray data;
+    QByteArray buffer;
     QTcpSocket *client;
     QStringList clientRequest;
     qint16 totalSize;

@@ -1,6 +1,8 @@
 ﻿#include "serverwidget.h"
 #include "ui_serverwidget.h"
 #include <QHeaderView>
+#include <QSqlRecord>
+
 const QString ServerWidget::DATA_BASE_NAME = "account.db";
 const QString ServerWidget::CONNECTION_NAME = "server_connection";
 
@@ -18,9 +20,9 @@ const QString ServerWidget::CONNECTION_NAME = "server_connection";
 //bool valid;                 // is the password (still) match the username
 
 QString ServerWidget::TABLENAME = "ACCOUNT";
-QString ServerWidget::COLUMNS = "username VARCHAR(20) UNIQUE, password VARCHAR(20), start_time INTEGER, end_time INTEGER, left_at_most INTEGER, "
-                                "share_rate REAL, total_share INTEGER, share_this_time INTEGER, total_fetch INTEGER, fetch_this_time INTEGER, "
-                                "credit REAL, valid INT";
+QString ServerWidget::COLUMNS = "username VARCHAR(20) UNIQUE, password VARCHAR(20), start_time REAL, end_time REAL, left_at_most REAL, "
+                                "share_rate REAL, total_share REAL, share_this_time REAL, total_fetch REAL, fetch_this_time REAL, "
+                                "credit REAL, valid REAL";
 QString ServerWidget::FIELDS = "username, password, start_time, end_time, left_at_most, share_rate, total_share, share_this_time, total_fetch, "
                                "fetch_this_time, credit, valid";
 
@@ -47,6 +49,7 @@ ServerWidget::ServerWidget(QWidget *parent) :QWidget(parent),ui(new Ui::ServerWi
             this, SLOT(updataEntryFromButton()));
 
     server = new ServerSocket(this);
+    server->setWidget(this);
     connect(server, SIGNAL(accountPushed(ExAccount)),
             this, SLOT(addEntry(ExAccount)));
     server->startServer();
@@ -111,7 +114,33 @@ bool ServerWidget::updataEntryFromButton(){
     return updateEntry(new_account);
 }
 
-
+ExAccount ServerWidget::selectUser(const QString &name){
+    QSqlTableModel model(this, database);
+    model.setTable(TABLENAME);
+    model.setFilter("username == " + addQuotes(name));
+    model.select();
+    if (model.rowCount() == 0){
+        qDebug() << "want to select " + name + " but not found";
+        emit selectedAccount(ExAccount());
+        return ExAccount();
+    }
+    QSqlRecord user = model.record(0);
+    ExAccount account;
+//    "username, password, start_time, end_time, left_at_most, share_rate, total_share, share_this_time, total_fetch, "
+//                                   "fetch_this_time, credit, valid";
+    account.username = name;
+    account.totalShare = user.value("total_share").toDouble();
+    account.totalFetchedFlow = user.value("total_fetch").toDouble();
+    account.shareRate = user.value("share_rate").toDouble();
+    account.shareFlow = user.value("share_this_time").toDouble();
+    account.fetchedFlow = user.value("fetch_this_time").toDouble();
+    account.credit = user.value("credit").toDouble();
+    account.toStrFileds();
+    account.toNumFields();
+    qDebug() << "the selected user is " + account.username << "\ncredit " << account.credit;
+    emit selectedAccount(account);
+    return account;
+}
 
 
 

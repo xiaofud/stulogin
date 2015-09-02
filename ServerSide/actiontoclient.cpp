@@ -5,7 +5,7 @@
 
 ActionToClient::ActionToClient(int sfd): socketDescriptor(sfd){
 //! must, qint16 won't be set to zero automatically!!!!!!!!!!!!!!!!!!
-    qDebug() << totalSize << " , " << bytesRead;
+//    qDebug() << totalSize << " , " << bytesRead;
     totalSize = 0;
     bytesRead = 0;
 }
@@ -68,13 +68,39 @@ void ActionToClient::reactToClient(){
         sendAccount();
     }else if (clientRequest.size() == 3){    // push
         addAccountToDataBase();
+    }else if (clientRequest.size() == 2){   // getinfo
+        emit needAccount(clientRequest.at(1));      // to get account from database
     }
-    client->close();    // all the work is done
+//    client->close();    // all the work is done
 }
 
 bool ActionToClient::sendAccount(){
     qDebug() << "Sending account to client";
     return true;
+}
+
+bool ActionToClient::sendAccount(ExAccount account){
+    account.toNumFields();
+    account.toStrFileds();
+    qDebug() << "start send Account " << account.username;
+    buffer.resize(0);
+    QDataStream out(&buffer, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_8);
+    out << (qint16) 0;
+    out << account.strFields << account.numberFields;
+    out.device()->seek(0);
+    out << (qint16) buffer.size();
+    client->write(buffer);
+    if (client->waitForBytesWritten(1000)){
+        qDebug() << "send account to user successfully";
+        client->close();
+        return true;
+    }else{
+        qDebug() << "Failed to send account";
+        client->close();
+        return false;
+    }
+
 }
 
 bool ActionToClient::addAccountToDataBase(){

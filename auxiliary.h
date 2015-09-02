@@ -1,6 +1,5 @@
 ﻿#ifndef AUXILIARY_H
 #define AUXILIARY_H
-
 /**
  * @brief provide some helper functions
  */

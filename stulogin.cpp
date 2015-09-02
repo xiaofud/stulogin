@@ -132,8 +132,7 @@ void STULogin::processStates(const QString &data){
         is_connected = true;
         bad_connection = false;
         wrongCount = 0;
-    }
-    else if (/* data.contains(INVALID) && */ logining == true){     // because after logout, the server page contains
+    }else if (/* data.contains(INVALID) && */ logining == true){     // because after logout, the server page contains
                                                                     // the warnning const string
         logining = false;
         if (++wrongCount >= MAX_ERROR_COUNT){  // the server sucks
@@ -146,10 +145,10 @@ void STULogin::processStates(const QString &data){
 
         login();    // keep trying to login
         return;
-    }
-    else{   // i.e. pressed logout button
+    }else{   // i.e. pressed logout button
         return;
     }
+
     QStringList info,states;
     info << USERNAME_POSITION << USEDBYTE_POSITION << TOTALBYTE_POSITION;
     int index, index_end;
@@ -162,6 +161,7 @@ void STULogin::processStates(const QString &data){
     used = states[1].replace(",","").toDouble() / CONVERT_RATE;     // from bytes to mb
     total = states[2].replace(",","").toDouble() / CONVERT_RATE;
     left = total - used;
+
     if (autoChange == true && is_connected && left <= thresholdValue){
         if (stopChaneing == true)
             return;
@@ -180,7 +180,7 @@ void STULogin::login(){
     login(user_copy,passwd);
 }
 
-void STULogin::setAccounts(QList<Account> *accounts){
+void STULogin::setAccounts(QList<ExAccount> *accounts){
     allAccounts = accounts;
     stopChaneing = false;
     //qDebug() << AllAccounts.count();
@@ -206,7 +206,7 @@ void STULogin::changeAccount(){
         stopChaneing = true;
         return;
     }
-    Account next = allAccounts->at(nextUserIndex);
+    ExAccount next = allAccounts->at(nextUserIndex);
     (*allAccounts)[nextUserIndex].hasBeenUsed = true;
     logout();
     login(next.username, next.password);

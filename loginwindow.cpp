@@ -65,7 +65,8 @@ void LoginWindow::setupSuspending(){
 }
 
 void LoginWindow::showClientWindow(){
-
+    connect(loginAction, SIGNAL(stateChanged(bool,QString,double,double,double)),
+            shareDialog, SLOT(setCurAccount(bool,QString,double,double,double)));
     shareDialog->setWindowTitle(trUtf8("共享界面"));
     shareDialog->show();
 }
@@ -114,8 +115,8 @@ void LoginWindow::setupLineEdit(){
             loginAction, SLOT(clearErrorCount()));      // erase the wrongCount
     connect(passwdLineEdit, SIGNAL(textChanged(QString)),
             loginAction, SLOT(clearErrorCount()));      // erase the wrongCount
-    connect(this, SIGNAL(accountChanged(QList<Account> *)),
-            loginAction, SLOT(setAccounts(QList<Account> *)));
+    connect(this, SIGNAL(accountChanged(QList<ExAccount> *)),
+            loginAction, SLOT(setAccounts(QList<ExAccount> *)));
 
 }
 
@@ -498,7 +499,7 @@ void LoginWindow::updateAccountToTable(){
         tmp_passwd = item2->data(Qt::UserRole).toString();
         if (tmp_user.isEmpty() || tmp_passwd.isEmpty())  // skip the empty entry
             continue;
-        accounts.append(Account(tmp_user, tmp_passwd));
+        accounts.append(ExAccount(tmp_user, tmp_passwd));
     }
     emit accountChanged(&accounts);
 }
