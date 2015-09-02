@@ -11,7 +11,6 @@ QSQLiteDataBaseManager::QSQLiteDataBaseManager
 
 }
 
-
 // open the database for use
 bool QSQLiteDataBaseManager::openDatabase(){
     dataBase = QSqlDatabase::addDatabase(driverName, connectionName);
@@ -45,7 +44,8 @@ bool QSQLiteDataBaseManager::createTable(const QString &tableName, const QString
 }
 
 
-
+// usage:
+// eg. insertValues("account", "str1, str2", "id, name")
 bool QSQLiteDataBaseManager::insertValues(const QString &tableName, const QString &values, const QString &fieldNames){
     if (query == 0)
         return false;
@@ -65,16 +65,4 @@ bool QSQLiteDataBaseManager::insertValues(const QString &tableName, const QStrin
         return false;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

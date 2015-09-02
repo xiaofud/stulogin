@@ -43,6 +43,8 @@ ServerWidget::ServerWidget(QWidget *parent) :QWidget(parent),ui(new Ui::ServerWi
 
     connect(ui->addEntryButton, SIGNAL(clicked(bool)),
             this, SLOT(addEntryFromLineEdit()));
+    connect(ui->updateButton, SIGNAL(clicked(bool)),
+            this, SLOT(updataEntryFromButton()));
 
     server = new ServerSocket(this);
     connect(server, SIGNAL(accountPushed(ExAccount)),
@@ -75,3 +77,54 @@ bool ServerWidget::addEntryFromLineEdit(){
     ExAccount new_account(username, passwd);
     return addEntry(new_account);
 }
+
+
+bool ServerWidget::updateEntry(const ExAccount &account){
+    // use TableModel to delete the row, and insert the updated row
+    QSqlTableModel model(this, database);
+    model.setTable(TABLENAME);
+    model.setFilter("username == " + addQuotes(account.username));
+    model.select();
+    if (model.rowCount() == 1){
+        if (model.removeRow(0) && model.submitAll() && addEntry(account))
+            return true;
+        else{
+            qDebug() << "In ServerWidget::updateEntry, Failed to update";
+            return false;
+        }
+
+    }else{
+        qDebug() << "In ServerWidget::updateEntry, the rowCount is " << model.rowCount();
+        return true;
+    }
+}
+
+bool ServerWidget::updataEntryFromButton(){
+    QString username =  ui->userLineEdit->text();
+    QString passwd = ui->passwdLineEdit->text();
+    ExAccount new_account(username, passwd);
+//    ExAccount tmp;
+//    tmp.fromStrFields(new_account.strFields);
+//    tmp.fromNumFields(new_account.numberFields);
+//    qDebug() << tmp.username;
+//    qDebug() << tmp.password;
+    return updateEntry(new_account);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
