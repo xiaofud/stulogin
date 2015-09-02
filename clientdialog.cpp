@@ -37,7 +37,7 @@ bool ClientDialog::connectToHost(const QString &addr, int port){
 bool ClientDialog::sendData(){
     buffer.resize(0);   // don't forget to do this
     if (!isConnected){
-        if (!connectToHost("127.0.0.1", 4567))
+        if (!connectToHost(ui->addressLineEdit->text(), ui->portLineEdit->text().toInt()))
             return false;
     }
     QDataStream out(&buffer, QIODevice::WriteOnly);
