@@ -51,7 +51,7 @@ private slots:
     void showConnectionError();
     void showClientWindow();
 signals:
-    void accountChanged(const QList<Account> &list);
+    void accountChanged(QList<Account> *list);
     void newConnectionState(double left, double speed);
 
 
@@ -90,6 +90,8 @@ private:
     int shownRow;   // used for displaying the password behind the table
     int shownCol;
     double previousLeft;    // used to figure the flow speed
+    int badConnectionCount;
+    bool hasShownBadConnection;
     double totalFlow;
     double leftFlow;    // left flow
     QString currentUserName;

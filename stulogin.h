@@ -27,7 +27,7 @@ public slots:
     void login(const QString &user, const QString &passwd);
     void handleReply(QNetworkReply *reply);
     void getState();
-    void setAccounts(const QList<Account> &accounts);
+    void setAccounts(QList<Account> *accounts);
     void setThresholdValue(int);
     void setAutoChangeState(bool);
     void changeAccount();   // switch the account
@@ -51,7 +51,7 @@ private:
     bool stopChaneing;
     bool bad_connection;
     mutable bool logining;  // bool for clicking button
-    int wrongCount;
+    int wrongCount;     // the server return ERROR when trying to connect immediately after the Logout action.
     QString user;
     QString user_copy;  // for trying logining again for the sucking server
     QString passwd;
@@ -60,7 +60,7 @@ private:
     double left;
     double thresholdValue;  // when to switch the account
     QTimer *delayTimer;
-    QList<Account> allAccounts;
+    QList<Account> *allAccounts;
     int ptr_account;    // point to which account's being used start from zero
 
 /******************************/

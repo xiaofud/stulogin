@@ -6,85 +6,121 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>424</width>
-    <height>384</height>
+    <width>474</width>
+    <height>406</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>LoginWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_6">
+   <layout class="QVBoxLayout" name="verticalLayout_7">
     <item>
      <widget class="QGroupBox" name="loginGroupBox">
       <property name="title">
        <string>登录区:</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout">
+            <layout class="QVBoxLayout" name="verticalLayout_2">
              <item>
-              <widget class="QLabel" name="userLabel">
-               <property name="text">
-                <string>账号:</string>
-               </property>
-              </widget>
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <item>
+                <widget class="QLabel" name="userLabel">
+                 <property name="text">
+                  <string>账号:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="userLineEdit">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="placeholderText">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="loginButton">
+                 <property name="text">
+                  <string>登录</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
-              <widget class="QLineEdit" name="userLineEdit">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="placeholderText">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="loginButton">
-               <property name="text">
-                <string>登录</string>
-               </property>
-              </widget>
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <widget class="QLabel" name="passwdLabel">
+                 <property name="text">
+                  <string>密码:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="passwdLineEdit">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="inputMask">
+                  <string/>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="echoMode">
+                  <enum>QLineEdit::Password</enum>
+                 </property>
+                 <property name="placeholderText">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="logoutButton">
+                 <property name="text">
+                  <string>登出</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <layout class="QVBoxLayout" name="verticalLayout">
              <item>
-              <widget class="QLabel" name="passwdLabel">
+              <widget class="QLabel" name="nowUserLabel">
                <property name="text">
-                <string>密码:</string>
+                <string>当前账号:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="passwdLineEdit">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="inputMask">
-                <string/>
-               </property>
+              <widget class="QLabel" name="usedLabel">
                <property name="text">
-                <string/>
-               </property>
-               <property name="echoMode">
-                <enum>QLineEdit::Password</enum>
-               </property>
-               <property name="placeholderText">
-                <string/>
+                <string>已用流量:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="logoutButton">
+              <widget class="QLabel" name="totalLabel">
                <property name="text">
-                <string>登出</string>
+                <string>全部流量:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="leftLabel">
+               <property name="text">
+                <string>剩余流量:</string>
                </property>
               </widget>
              </item>
@@ -93,45 +129,20 @@
           </layout>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <item>
-            <widget class="QLabel" name="nowUserLabel">
-             <property name="text">
-              <string>当前账号:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="usedLabel">
-             <property name="text">
-              <string>已用流量:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="totalLabel">
-             <property name="text">
-              <string>全部流量:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="leftLabel">
-             <property name="text">
-              <string>剩余流量:</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <widget class="QLabel" name="noticeLabel">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="defaultButton">
+           <property name="text">
+            <string>设为默认账号</string>
+           </property>
+          </widget>
          </item>
         </layout>
-       </item>
-       <item>
-        <widget class="QPushButton" name="defaultButton">
-         <property name="text">
-          <string>设为默认账号</string>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>

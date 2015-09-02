@@ -180,8 +180,8 @@ void STULogin::login(){
     login(user_copy,passwd);
 }
 
-void STULogin::setAccounts(const QList<Account> &accounts){
-    this->allAccounts = accounts;
+void STULogin::setAccounts(QList<Account> *accounts){
+    allAccounts = accounts;
     stopChaneing = false;
     //qDebug() << AllAccounts.count();
 }
@@ -206,8 +206,8 @@ void STULogin::changeAccount(){
         stopChaneing = true;
         return;
     }
-    Account next = allAccounts.at(nextUserIndex);
-    allAccounts[nextUserIndex].hasBeenUsed = true;
+    Account next = allAccounts->at(nextUserIndex);
+    (*allAccounts)[nextUserIndex].hasBeenUsed = true;
     logout();
     login(next.username, next.password);
 
@@ -224,16 +224,16 @@ void STULogin::delayForSomeTime(int ms){
 }
 
 int STULogin::getNextFreshAccount(){
-   int count = allAccounts.count();
+   int count = allAccounts->count();
    for(int i = 0 ; i < count ; ++i){
-       if (allAccounts[i].hasBeenUsed == false)
+       if ((*allAccounts)[i].hasBeenUsed == false)
            return i;
    }
    return -1;
 }
 
 void STULogin::resetAllAccounts(){
-    int count = allAccounts.count();
+    int count = allAccounts->count();
     for(int i = 0 ; i < count ; ++i)
-        allAccounts[i].hasBeenUsed = false;
+        (*allAccounts)[i].hasBeenUsed = false;
 }

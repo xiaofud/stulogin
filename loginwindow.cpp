@@ -25,7 +25,7 @@ double LoginWindow::THRESHOLDVALUR = 1.0;   // 1.0 mb
 double LoginWindow::UPDATE_PERIOD = 1.5;  // 1.5 seconds
 
 
-LoginWindow::LoginWindow(QWidget *parent) :QMainWindow(parent), logining(false), shownRow(-1), shownCol(-1),previousLeft(-1){
+LoginWindow::LoginWindow(QWidget *parent) :QMainWindow(parent), logining(false), shownRow(-1), shownCol(-1),previousLeft(-1), badConnectionCount(0), hasShownBadConnection(false){
     setupUi(this);
     loginAction = new STULogin(this);
     connect(loginAction, SIGNAL(stateChanged(bool,QString,double,double,double)),
@@ -35,6 +35,9 @@ LoginWindow::LoginWindow(QWidget *parent) :QMainWindow(parent), logining(false),
     connect(loginAction, SIGNAL(badConnection()),
             this, SLOT(showConnectionError()));
     shareDialog = new ClientDialog(this);
+
+    noticeLabel->setText(trUtf8("注意学校网站使用的单位是Byte, 这里转换为了MB，实际流量并没有少!"));
+
     // construction helper
     setupSuspending();
     setupButtons();
@@ -111,8 +114,8 @@ void LoginWindow::setupLineEdit(){
             loginAction, SLOT(clearErrorCount()));      // erase the wrongCount
     connect(passwdLineEdit, SIGNAL(textChanged(QString)),
             loginAction, SLOT(clearErrorCount()));      // erase the wrongCount
-    connect(this, SIGNAL(accountChanged(QList<Account>)),
-            loginAction, SLOT(setAccounts(QList<Account>)));
+    connect(this, SIGNAL(accountChanged(QList<Account> *)),
+            loginAction, SLOT(setAccounts(QList<Account> *)));
 
 }
 
@@ -240,6 +243,8 @@ void LoginWindow::updateState(bool connected, const QString &user, double used, 
     }
     else{
         loginButton->setEnabled(false);
+        badConnectionCount = 0;     // to reset the count, so if the bad connection occurs, the message will be sent.
+        hasShownBadConnection = false;
     }
 
     currentUserName = user;
@@ -267,7 +272,6 @@ void LoginWindow::updateState(bool connected, const QString &user, double used, 
     }
 
     // update the displaying
-//    int left_int = (int) left;
     QString title = connected ? QString::number((int) left) + "MB": "not connected yet";
     setWindowTitle(title + "|" + speed_str + "|" + user );
     usedLabel->setText(this->USED_STR + QString::number(Auxiliary::setDecimalBit(used, 3)) + "MB");
@@ -404,14 +408,6 @@ void LoginWindow::hidePassword(){
 }
 
 QString LoginWindow::getExeDir() const{
-//    // return format /dirname/ with tailing '/'
-//    char **argv = qApp->argv();
-//    QString path(argv[0]);
-//    int index = path.lastIndexOf(QDir::separator());    // for splitting the name and the dir
-//    if (index != -1){
-//        path = path.mid(0, index + 1);  // because mid doesn't include the right-hand-side index
-//    }else
-//        path = "";
     return qApp->applicationDirPath() + QDir::separator();
 }
 
@@ -476,10 +472,8 @@ void LoginWindow::closeEvent(QCloseEvent *event){
         showed = true;
     }
     hide();
+    // The process to save the settings is delegated to exitAction
     event->ignore();
-
-//    saveSettings();
-//    event->accept();
 }
 
 
@@ -506,7 +500,7 @@ void LoginWindow::updateAccountToTable(){
             continue;
         accounts.append(Account(tmp_user, tmp_passwd));
     }
-    emit accountChanged(accounts);
+    emit accountChanged(&accounts);
 }
 
 void LoginWindow::openSTUEmail(){
@@ -514,5 +508,8 @@ void LoginWindow::openSTUEmail(){
 }
 
 void LoginWindow::showConnectionError(){
-    QMessageBox::warning(this, trUtf8("网络连接有问题"), trUtf8("不能连接到网络，请检查网络设置"), QMessageBox::Ok);
+    if (++badConnectionCount >= 3  && hasShownBadConnection == false ){
+        QMessageBox::warning(this, trUtf8("网络连接有问题"), trUtf8("不能连接到网络，请检查网络设置"), QMessageBox::Ok);
+        hasShownBadConnection = true;
+    }
 }
