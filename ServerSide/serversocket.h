@@ -1,7 +1,8 @@
 ﻿#ifndef SERVERSOCKET_H
 #define SERVERSOCKET_H
 #include <QTcpServer>
-
+#include <QHostAddress>
+#include "exaccount.h"
 class QThreadPool;
 
 class ServerSocket : public QTcpServer{
@@ -15,12 +16,14 @@ public slots:
     void emitAccount(QString user, QString passwd);
 
 signals:
-    void accountPushed(QString user, QString passwd);   // client sent the account
+    void accountPushed(const ExAccount& account);   // client sent the account
 
 protected:
     void incomingConnection(int sfd);
 
 private:
+    static QHostAddress ADDRESS;
+    static int PORT;
     QThreadPool *pool;
 };
 

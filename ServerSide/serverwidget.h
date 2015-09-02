@@ -2,6 +2,7 @@
 #define SERVERWIDGET_H
 #include <QWidget>
 #include <QSqlTableModel>
+#include <exaccount.h>
 #include "qsqlitedatabasemanager.h"
 #include "serversocket.h"
 
@@ -21,10 +22,12 @@ public:
 
 public slots:
     bool addEntryFromLineEdit();
-    bool addEntry(const QString &username, const QString &passwd);
+    bool addEntry(const ExAccount &accout);
 
 private:
-
+    static QString TABLENAME;
+    static QString COLUMNS;
+    static QString FIELDS;
     QString addQuotes(const QString &str);
     Ui::ServerWidget *ui;
     QSQLiteDataBaseManager *tableManager;

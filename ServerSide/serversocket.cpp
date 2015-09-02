@@ -3,6 +3,10 @@
 #include "serversocket.h"
 #include "actiontoclient.h"
 
+
+int ServerSocket::PORT = 4567;
+QHostAddress ServerSocket::ADDRESS = QHostAddress::Any;
+
 ServerSocket::ServerSocket(QObject *parent) : QTcpServer(parent){
     pool = new QThreadPool(this);
     pool->setMaxThreadCount(10);
@@ -24,7 +28,7 @@ void ServerSocket::incomingConnection(int sfd){
 }
 
 bool ServerSocket::startServer(){
-    if (this->listen(QHostAddress::Any, 4567)){
+    if (this->listen(ADDRESS, PORT)){
         return true;
     }else{
         qDebug() << this->errorString();
@@ -34,5 +38,6 @@ bool ServerSocket::startServer(){
 }
 
 void ServerSocket::emitAccount(QString user, QString passwd){
-    emit accountPushed(user, passwd);
+    ExAccount account(user, passwd);
+    emit accountPushed(account);
 }

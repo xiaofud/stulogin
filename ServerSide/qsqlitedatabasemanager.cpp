@@ -57,6 +57,7 @@ bool QSQLiteDataBaseManager::insertValues(const QString &tableName, const QStrin
         insertStatement =
                 "INSERT INTO " + tableName + " (" + fieldNames + ")" + " VALUES(" +values + ")";
     // execute the query
+    qDebug() << "Insert Statement:\n" << insertStatement;
     if (query->exec(insertStatement)){
         return true;
     }else{
