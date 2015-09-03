@@ -60,3 +60,8 @@ QString ExAccount::toInsertStr() const{
     return insertStatement;
 
 }
+
+void ExAccount::update(){
+    toStrFileds();
+    toNumFields();
+}

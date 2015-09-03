@@ -65,7 +65,7 @@ QString ServerWidget::addQuotes(const QString &str){
     return "'" + str + "'";
 }
 
-bool ServerWidget::addEntry(const ExAccount &accout){
+bool ServerWidget::addEntry(ExAccount accout){
 
     if(tableManager->insertValues(TABLENAME, accout.toInsertStr(), FIELDS)){
         tableModel->select();

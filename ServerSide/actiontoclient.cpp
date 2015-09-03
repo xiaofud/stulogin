@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QEventLoop>
 #include <QDataStream>
-#include <QThread>
+//#include <QThread>
 
 ActionToClient::ActionToClient(int sfd): socketDescriptor(sfd){
 //! must, qint16 won't be set to zero automatically!!!!!!!!!!!!!!!!!!
@@ -12,21 +12,15 @@ ActionToClient::ActionToClient(int sfd): socketDescriptor(sfd){
     client = new QTcpSocket;
     if (!client->setSocketDescriptor(socketDescriptor)){
         qDebug() << client->errorString();
-        return;
+        valid = false;
+    }else{
+        valid = true;
     }
 }
 
 
 void ActionToClient::run(){
     qDebug() << "handling a client";
-    qDebug() << "ActionToClient::run runs in " << QThread::currentThread();
-//    client = new QTcpSocket;
-//    client->moveToThread(QThread::currentThread());
-//    qDebug() << "Moved the client to another thread " << client->thread();
-//    if (!client->setSocketDescriptor(socketDescriptor)){
-//        qDebug() << client->errorString();
-//        return;
-//    }
 
     connect(client, SIGNAL(readyRead()),
             this, SLOT(readFromClient()), Qt::QueuedConnection);
@@ -49,14 +43,13 @@ ActionToClient::~ActionToClient(){
 }
 
 void ActionToClient::readFromClient(){
-//    qDebug() << "starting reading data totalSize =" << totalSize << " bytesRead = " + bytesRead;
     QDataStream in(client);
     in.setVersion(QDataStream::Qt_4_8);
     // get the total size this connection need to read
     if (totalSize == 0 ){
         if (client->bytesAvailable() >= sizeof(qint16)){
             in >> totalSize;
-//            qDebug() << "the total size is " << totalSize;
+            qDebug() << "totalSize is " << totalSize;
             bytesRead += sizeof(qint16);
         }else
             return;     // means the size info has not been complete yet
@@ -66,22 +59,25 @@ void ActionToClient::readFromClient(){
         in >> clientRequest;
         emit finishedRead();
         bytesRead = totalSize = 0;
-        return;
-    }else
-        return;     // wait for more data coming
-
+    }
+    return; // wait for more data coming
 }
 
 void ActionToClient::reactToClient(){
-    if (clientRequest.size() == 1){     // pull
+    qDebug() << clientRequest.size();
+    if (clientRequest.size() == 0){
+        emit jobFinished();
+        return;
+    }
+
+    if (clientRequest.at(0) == "pull"){     // pull
         sendAccount();
-    }else if (clientRequest.size() == 3){    // push
+        emit jobFinished();
+    }else if (clientRequest.at(0) == "push"){    // push
         addAccountToDataBase();
-    }else if (clientRequest.size() == 2){   // getinfo
-        qDebug() << "needAccount emitted in QThread " << QThread::currentThread();
+    }else if (clientRequest.at(0) == "getinfo"){   // getinfo
         emit needAccount(clientRequest.at(1));      // to get account from database
     }
-//    client->close();    // all the work is done
 }
 
 bool ActionToClient::sendAccount(){
@@ -92,7 +88,6 @@ bool ActionToClient::sendAccount(){
 bool ActionToClient::sendAccount(ExAccount account){
     account.toNumFields();
     account.toStrFileds();
-    qDebug() << "start send Account " << account.username << " at QThread(" << QThread::currentThread() << ")";
     buffer.resize(0);
     QDataStream out(&buffer, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_8);
@@ -100,8 +95,6 @@ bool ActionToClient::sendAccount(ExAccount account){
     out << account.strFields << account.numberFields;
     out.device()->seek(0);
     out << (qint16) buffer.size();
-    qDebug() << "client is at QThread(" << QThread::currentThread() << ")";
-    qDebug() << "client belongs to QThread " << client->thread();
     client->write(buffer);
     if (client->waitForBytesWritten(1000)){
         qDebug() << "send account to user successfully";
@@ -119,7 +112,13 @@ bool ActionToClient::addAccountToDataBase(){
     QString username = clientRequest[1];
     QString passwd = clientRequest[2];
     qDebug() << "adding " + username + "," + passwd + " to database!";
-    emit accountPushed(username, passwd);
+    ExAccount account(username, passwd);
+    account.startShare = clientRequest[3].toDouble();
+    account.endShare = clientRequest[4].toDouble();
+    account.shareFlow = clientRequest[5].toDouble();
+    account.update();
+    emit accountPushed(account);
+    emit jobFinished();
     return true;
 }
 

@@ -22,7 +22,7 @@ public:
 
 public slots:
     bool addEntryFromLineEdit();
-    bool addEntry(const ExAccount &accout);
+    bool addEntry(ExAccount accout);
     bool updataEntryFromButton();
     bool updateEntry(const ExAccount &account);
     ExAccount selectUser(const QString &name);

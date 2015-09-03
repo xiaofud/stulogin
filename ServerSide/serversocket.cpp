@@ -22,14 +22,13 @@ ServerSocket::~ServerSocket(){
 void ServerSocket::incomingConnection(int sfd){
     // use threadpool to do tasks
     ActionToClient *action = new ActionToClient(sfd);
-    qDebug() << "ServerSocket lives in  " << QThread::currentThread() ;
-    qRegisterMetaType<ExAccount>("ExAccount");
-    connect(action, SIGNAL(accountPushed(QString,QString)),
-            this, SLOT(emitAccount(QString,QString)));
+    // notice that widget and action belong to the same thread. But action's run() method runs in a different thread, so take care of this.
+    connect(action, SIGNAL(accountPushed(ExAccount)),
+            this, SLOT(emitAccount(ExAccount)));
     connect(action, SIGNAL(needAccount(QString)),
-            widget, SLOT(selectUser(QString)), Qt::QueuedConnection);
+            widget, SLOT(selectUser(QString)));
     connect(widget, SIGNAL(selectedAccount(ExAccount)),
-            action, SLOT(sendAccount(ExAccount)), Qt::QueuedConnection);
+            action, SLOT(sendAccount(ExAccount)));
     action->setAutoDelete(true);
     pool->start(action);
     qDebug() << "a client 's coming!";
@@ -45,8 +44,7 @@ bool ServerSocket::startServer(){
 
 }
 
-void ServerSocket::emitAccount(QString user, QString passwd){
-    ExAccount account(user, passwd);
+void ServerSocket::emitAccount(ExAccount account){
     emit accountPushed(account);
 }
 

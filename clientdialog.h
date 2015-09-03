@@ -32,6 +32,7 @@ public slots:
     void displayError(QAbstractSocket::SocketError err);
     void displayInfo();
     void setCurAccount(bool connected,const QString &user, double used, double total, double left);
+    bool checkDataValid();
 
 signals:
     void accountRead();     // emited when the account information is transferred to the client

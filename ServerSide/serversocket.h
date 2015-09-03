@@ -17,10 +17,10 @@ public:
     bool startServer();
 
 public slots:
-    void emitAccount(QString user, QString passwd);
+    void emitAccount(ExAccount account);
 
 signals:
-    void accountPushed(const ExAccount& account);   // client sent the account
+    void accountPushed(ExAccount account);   // client sent the account
 
 protected:
     void incomingConnection(int sfd);

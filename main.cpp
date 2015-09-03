@@ -1,6 +1,7 @@
 ﻿#include <QApplication>
 #include "loginwindow.h"
 #include "clientdialog.h"
+#include "clientdialog.h"
 int main(int argc, char *argv[]){
     QApplication app(argc, argv);
     LoginWindow loginWin;

@@ -1,6 +1,9 @@
 ﻿#include <QDebug>
 #include "clientdialog.h"
 #include "ui_clientdialog.h"
+#include <QDate>
+#include <QTime>
+#include <QMessageBox>
 
 ClientDialog::ClientDialog(QWidget *parent) :QDialog(parent),ui(new Ui::ClientDialog), isConnected(false){
     ui->setupUi(this);
@@ -25,7 +28,25 @@ ClientDialog::ClientDialog(QWidget *parent) :QDialog(parent),ui(new Ui::ClientDi
             this, SLOT(pushAccount()));
     connect(ui->getUserButton, SIGNAL(clicked(bool)),
             this, SLOT(pullAccount()));
+
+
+    // set proper date
+    ui->fromDateTimeEdit->setDate(QDate::currentDate());
+    ui->fromDateTimeEdit->setTime(QTime::currentTime());
+    ui->toDateTimeEdit->setDate(QDate::currentDate().addDays(1));
+    ui->toDateTimeEdit->setTime(QTime(24, 0, 0));
+
 }
+
+bool ClientDialog::checkDataValid(){
+    long diff = ui->fromDateTimeEdit->dateTime().toTime_t() - ui->toDateTimeEdit->dateTime().toTime_t();
+    if (diff > 0 || qAbs(diff) < 30 * 60){
+        QMessageBox::warning(this, trUtf8("时间设置错误"), trUtf8("请保证起始时间先于结束时间半个钟以上: )"));
+        return false;
+    }
+    return true;
+}
+
 
 ClientDialog::~ClientDialog(){
     delete ui;
@@ -51,8 +72,10 @@ bool ClientDialog::sendData(){
     out.setVersion(QDataStream::Qt_4_8);
     out << (qint16) 0;
     out << strList;
+//    qDebug() << strList.size();
     out.device()->seek(0);
     out << (qint16)buffer.size();
+    qDebug() << "total size is " << buffer.size();
     clientSocket->write(buffer);
     if (clientSocket->waitForBytesWritten(1000)){
         qDebug() << "the data has been written";
@@ -75,9 +98,19 @@ bool ClientDialog::pullAccount(){
 }
 
 bool ClientDialog::pushAccount(){
+    if (!checkDataValid()){
+        return false;
+    }
     strList.clear();
-    strList << "push" << ui->userLineEdit->text() << ui->passwdLineEdit->text();
-    return sendData();
+    strList << "push" << ui->userLineEdit->text() << ui->passwdLineEdit->text() << QString::number(ui->fromDateTimeEdit->dateTime().toTime_t())
+            << QString::number(ui->toDateTimeEdit->dateTime().toTime_t()) << QString::number(ui->shareSpinBox->value());
+    if (sendData()){
+        setWindowTitle(trUtf8("分享成功"));
+        return true;
+    }else{
+        setWindowTitle(trUtf8("分享失败"));
+        return false;
+    }
 }
 
 void ClientDialog::handleConnection(){
@@ -103,7 +136,7 @@ void ClientDialog::setCurAccount(bool connected, const QString &user, double use
     cur_account.left = left;
     totalSize = 0;      // prepare to read the account
     bytesRead = 0;
-    setWindowTitle(user);
+//    setWindowTitle(user);
     if (new_account)
         getAccount(user);
 

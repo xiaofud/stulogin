@@ -45,7 +45,7 @@ public slots:
 signals:
     void jobFinished();    // quit the local event loop
     void finishedRead();
-    void accountPushed(QString user, QString passwd);   // client sent the account
+    void accountPushed(ExAccount account);   // client sent the account
 //    void receivedAccount(ExAccount &account);
     void needAccount(const QString &name);
 
@@ -56,8 +56,9 @@ private:
     bool sendAccount();     // send account to client
 
     bool addAccountToDataBase();
-//    void startup();     // create the TcpSocket and connect some signal and slots
+
     int socketDescriptor;
+    bool valid;     // tell if the socket is well established
     QByteArray data;
     QByteArray buffer;
     QTcpSocket *client;

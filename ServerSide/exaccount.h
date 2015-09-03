@@ -36,6 +36,7 @@ public:
     void fromNumFields(QList<double> numList);
     void toStrFileds() ;    // if you changed the properties, remember to update the list
     void toNumFields() ;
+    void update();
 
 private:
 
