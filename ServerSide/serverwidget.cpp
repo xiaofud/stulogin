@@ -137,7 +137,7 @@ ExAccount ServerWidget::selectUser(const QString &name){
     account.credit = user.value("credit").toDouble();
     account.toStrFileds();
     account.toNumFields();
-    qDebug() << "the selected user is " + account.username << "\ncredit " << account.credit;
+//    qDebug() << "the selected user is " + account.username << "\ncredit " << account.credit;
     emit selectedAccount(account);
     return account;
 }

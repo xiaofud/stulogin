@@ -5,6 +5,7 @@
 #include "serverwidget.h"
 
 
+
 int ServerSocket::PORT = 4567;
 QHostAddress ServerSocket::ADDRESS = QHostAddress::Any;
 
@@ -21,12 +22,14 @@ ServerSocket::~ServerSocket(){
 void ServerSocket::incomingConnection(int sfd){
     // use threadpool to do tasks
     ActionToClient *action = new ActionToClient(sfd);
+    qDebug() << "ServerSocket lives in  " << QThread::currentThread() ;
+    qRegisterMetaType<ExAccount>("ExAccount");
     connect(action, SIGNAL(accountPushed(QString,QString)),
             this, SLOT(emitAccount(QString,QString)));
     connect(action, SIGNAL(needAccount(QString)),
-            widget, SLOT(selectUser(QString)));
+            widget, SLOT(selectUser(QString)), Qt::QueuedConnection);
     connect(widget, SIGNAL(selectedAccount(ExAccount)),
-            action, SLOT(sendAccount(ExAccount)));
+            action, SLOT(sendAccount(ExAccount)), Qt::QueuedConnection);
     action->setAutoDelete(true);
     pool->start(action);
     qDebug() << "a client 's coming!";
