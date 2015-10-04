@@ -65,8 +65,6 @@ void LoginWindow::setupSuspending(){
 }
 
 void LoginWindow::showClientWindow(){
-    connect(loginAction, SIGNAL(stateChanged(bool,QString,double,double,double)),
-            shareDialog, SLOT(setCurAccount(bool,QString,double,double,double)));
     shareDialog->setWindowTitle(trUtf8("共享界面"));
     shareDialog->show();
 }
@@ -141,7 +139,7 @@ void LoginWindow::setupSpinAndCheck(){
             loginAction, SLOT(setThresholdValue(int)));
 
     // checkbox for determining whether to auto switch the account when the left-flow is less than the thresholdValue
-    connect(autoChange,SIGNAL(toggled(bool)),
+    connect(autoChange, SIGNAL(toggled(bool)),
             loginAction, SLOT(setAutoChangeState(bool)));
 
 }
@@ -180,6 +178,7 @@ void LoginWindow::startup(){
             loginAction, SLOT(getState()));
     stateTimer->start();
     show();
+    trayIcon->show();
     if (!userLineEdit->text().isEmpty() && !passwdLineEdit->text().isEmpty())   // the loadSettings() will fill the lineEdit if
                                                                                 // any default account
         login();
@@ -295,6 +294,10 @@ void LoginWindow::loadSettings(){
     userLineEdit->setText(username);
     passwdLineEdit->setText(passwd);
     autoChange->setChecked(autoChangeFlag);
+    // in order to emit the signal so that the program can switch the account at the very begining if
+    // needed, by doing these twice the state will be right
+    autoChange->toggle();
+    autoChange->toggle();
     loadUsers();    // read the user data
 }
 
@@ -467,7 +470,7 @@ void LoginWindow::setUserTable(QStringList &users){
 
 void LoginWindow::closeEvent(QCloseEvent *event){
     static bool showed = false;
-    trayIcon->show();
+    saveSettings();     // sometimes, the program will open until shutdown
     if (!showed){
 //        trayIcon->showMessage("Run in the background", "You can click the trayIcon to exit the program", QSystemTrayIcon::Information, 1000);
         showed = true;

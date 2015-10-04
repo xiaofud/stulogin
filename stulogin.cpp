@@ -196,7 +196,7 @@ void STULogin::setThresholdValue(int val){
 
 void STULogin::setAutoChangeState(bool state){
     autoChange = state;
-    //qDebug() << "The state changed!!!" << state;
+    qDebug() << "The state changed!!!" << state;
 }
 
 void STULogin::changeAccount(){
