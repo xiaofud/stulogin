@@ -53,7 +53,15 @@ LoginWindow::LoginWindow(QWidget *parent) :QMainWindow(parent), logining(false),
 
     smallWindow->show();
     smallWindow->showAtCorner();
-
+//    int counts;
+//    QStringList mac_address = loginAction->getMacAddresses();
+//    for(int i = 0 ; i < mac_address.size() / 2 ; i += 2){
+//        QString name = mac_address.at(i);
+//        QString addr = mac_address.at(i + 1);
+//        qDebug() << name << " " << addr;
+//        counts += name.size() + addr.size();
+//    }
+//    qDebug() << "counts are " <<  counts;
 }
 
 void LoginWindow::setupSuspending(){

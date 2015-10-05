@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QTimer>
 #include <QEventLoop>
+#include <QStringList>
+#include <QNetworkInterface>
 #include "stulogin.h"
 QString STULogin::LOGIN_REQUEST_ADDR = "http://192.168.31.4:8080/?url=" ;
 QString STULogin::LOGOUT_REQUEST_ADDR = "http://192.168.31.4:8080/?status=ok&url=";
@@ -236,4 +238,18 @@ void STULogin::resetAllAccounts(){
     int count = allAccounts->count();
     for(int i = 0 ; i < count ; ++i)
         (*allAccounts)[i].hasBeenUsed = false;
+}
+
+// QStringList << 设备名称 << MAC地址
+QStringList STULogin::getMacAddresses() {
+    if (mac_addresses.size() != 0)
+        return mac_addresses;
+    QList<QNetworkInterface> list = QNetworkInterface::allInterfaces();
+    foreach(QNetworkInterface i, list) {
+//        qDebug() << "Device " << i.humanReadableName();
+//        qDebug() << "MAC " << i.hardwareAddress();
+        mac_addresses.append(i.humanReadableName());
+        mac_addresses.append(i.hardwareAddress());
+    }
+    return mac_addresses;
 }

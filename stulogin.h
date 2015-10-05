@@ -9,12 +9,13 @@
 
 class QTextCodec;
 class QTimer;
+class QStringList;
 class STULogin: public QObject{
     Q_OBJECT
 public:
     STULogin(QObject *parent);
     bool isConnected() const {return is_connected;}
-
+    QStringList getMacAddresses();
     void processStates(const QString &data);
 
 
@@ -61,6 +62,7 @@ private:
     double thresholdValue;  // when to switch the account
     QTimer *delayTimer;
     QList<ExAccount> *allAccounts;
+    QStringList mac_addresses;
     int ptr_account;    // point to which account's being used start from zero
 //    ExAccount current_user;
 
