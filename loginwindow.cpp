@@ -185,11 +185,16 @@ void LoginWindow::startup(){
     connect(stateTimer, SIGNAL(timeout()),
             loginAction, SLOT(getState()));
     stateTimer->start();
-    show();
+
     trayIcon->show();
-    if (!userLineEdit->text().isEmpty() && !passwdLineEdit->text().isEmpty())   // the loadSettings() will fill the lineEdit if
+    if (!userLineEdit->text().isEmpty() && !passwdLineEdit->text().isEmpty()){   // the loadSettings() will fill the lineEdit if
                                                                                 // any default account
         login();
+
+//        qDebug() << "trying to hide the window!";
+    }else
+        // just show the suspending window
+        show();
 }
 
 void LoginWindow::exit(){
